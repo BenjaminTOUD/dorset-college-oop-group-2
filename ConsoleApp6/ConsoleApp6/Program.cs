@@ -11,6 +11,7 @@ namespace ConsoleApp6
     {
         static void Main(string[] args)
         {
+            int yoo = 2;
         }
     }
 }
