@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    class Course         //Victor CAZAUX , Théo UNDERWOOD , Nicolas GONCALVES , BENJAMIN TOUBIANA , FOUCAUD BONNEFONT , Thomas CULINO
+    class Course         // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
+
     {
         string name;
         double duration;
