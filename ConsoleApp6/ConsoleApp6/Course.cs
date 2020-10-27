@@ -12,7 +12,6 @@ namespace Project
         string name;
         double duration;
         string coursePlan;
-        // FacultyMember prof; //need to create FacultyMember class
         string room;
         private FacultyMember prof;
 

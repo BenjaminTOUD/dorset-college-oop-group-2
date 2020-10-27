@@ -41,9 +41,9 @@
         public void ChangeAdress()
         {}
 
-        public override string ToString() //Ne pas afficher le password
+        public override string ToString() //Improve upon it
         {
-            return password;
+            return name;
         }
     }
 }

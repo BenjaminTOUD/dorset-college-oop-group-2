@@ -16,7 +16,7 @@ namespace Project
 
         public void StudentDetail(Student student)
         {
-            Console.WriteLine("ID : " + User.ID + ", Name : " + User.Name + ", Adress : " + User.Adress + ", Phone : " + User.PhoneNumber);
+            Console.WriteLine("ID : " + User.ID + ", Name: " + User.Name + ", Adress : " + User.Adress + ", Phone : " + User.PhoneNumber);
         }
     }
 }
