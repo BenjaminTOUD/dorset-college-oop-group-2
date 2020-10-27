@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Project
 {
     // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
-    class Tutor
+    class Tutor : FacultyMember
     {
-        public Tutor()
+        public Tutor(List<Course> courseList) : base(courseList)
         {
 
         }
