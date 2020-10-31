@@ -46,7 +46,7 @@ namespace Project
 
         public string toStringCoursePlan()
         {
-            return "The course name is : " + name + ", the course duration is : " + duration + " minutes, the professor is :" + prof.Name + " and the course will be in room : " + room;
+            return "The course name is: " + name + ", the course duration is : " + duration + " minutes, the professor is :" + prof.Name + " and the course will be in room : " + room;
         }
 
 
