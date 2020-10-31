@@ -24,6 +24,25 @@ namespace Project
             this.room = room;
         }
 
+        public string Name
+        {
+            get => name;
+        }
+
+        public string CoursePlan
+        {
+            get => coursePlan;
+        }
+
+        public double Duration
+        {
+            get => duration;
+        }
+
+        public string Room
+        {
+            get => room;
+        }
 
         public string toStringCoursePlan()
         {
