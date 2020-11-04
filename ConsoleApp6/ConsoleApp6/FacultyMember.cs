@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Project
-
 {
+    // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
     class FacultyMember : User
     {
         List<Course> courses = new List<Course>();
@@ -28,12 +28,12 @@ namespace Project
         public void AttendThere(Student student)
         {
             bool attendance = true;
-            student.attendance.add(attendance);
+            student.Attendance.Add(attendance);
         }
         public void AttendAbsent(Student student)
         {
             bool attendance = false;
-            student.attendance.add(attendance);
+            student.Attendance.Add(attendance);
         }
 
         public void CreateExam()
@@ -44,12 +44,12 @@ namespace Project
         public void EditCoursePlan(Course course)
         {
             Console.WriteLine("There is the actual courseplan :");
-            Console.WriteLine(course.courseplan);
+            Console.WriteLine(course.CoursePlan);
             Console.WriteLine();
             Console.WriteLine("Type the new courseplan : ");
-            course.courseplan = Console.ReadLine();
+            course.CoursePlan = Console.ReadLine();
             Console.WriteLine("There is the new courseplan");
-            Console.WriteLine(course.courseplan);
+            Console.WriteLine(course.CoursePlan);
             Console.ReadKey();
         }
 

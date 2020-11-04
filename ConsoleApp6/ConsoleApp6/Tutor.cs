@@ -19,18 +19,18 @@ namespace Project
             int[] result = new int[2];
             result[0] = -1;
             result[1] = -1;
-            for(int i=0;i<this.courseList.Count;i++)
+            for (int i = 0; i < this.courseList.Count; i++)
             {
-                for(int j=0;j<courseList[i].clas.Count;j++)
+                for (int j = 0; j < courseList[i].clas.Count; j++)
                 {
-                    if (courseList[i].clas[j]==student)
+                    if (courseList[i].clas[j] == student)
                     {
-                        result[0]=i;
+                        result[0] = i;
                         result[1] = j;
                         break;
                     }
                 }
-            
+
             }
             return result;
         }
@@ -40,13 +40,14 @@ namespace Project
             {
                 Console.WriteLine("This student is not in any of your courses");
             }
-            int i = IsStudent(student)[0];
-            int j = IsStudent(student)[1]; 
             else
             {
+                int i = IsStudent(student)[0];
+                int j = IsStudent(student)[1];
                 Console.WriteLine("ID : " + courseList[i].clas[j].ID + ", Name: " + courseList[i].clas[j].Name + ", Adress : " + courseList[i].clas[j].Adress + ", Phone : " + courseList[i].clas[j].PhoneNumber);
             }
-        
+
         }
     }
+
 }

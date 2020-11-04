@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
     class Admin : User
     {
+        // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
         public Admin()
         {
             #region test
@@ -27,7 +27,7 @@ namespace Project
             #endregion
         }
 
-        public void CreateCourse()
+        public void CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room)
         {
             new Course(name, duration, coursePlan, prof, room);
             Console.WriteLine($"the course {name} has been created");
@@ -73,10 +73,10 @@ namespace Project
             }
             Console.WriteLine(totalPayment);
         }
-        public void AddStudent(string name, List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance)
+        public void AddStudent(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance)
         {
             new Student(classes, year, payment, notes, attendance);
-            Console.WriteLine($"the student : {name} has been added");
+            Console.WriteLine($"the student : {Name} has been added");
         }
     }
 }
