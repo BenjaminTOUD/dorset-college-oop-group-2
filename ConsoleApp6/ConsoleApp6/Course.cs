@@ -24,11 +24,11 @@ namespace Project
             this.room = room;
         }
 
-          public string Name => name;
-          public double Duration => duration;
-          public string CoursePlan => coursePlan;
-          public string Room => room;
-        
+        public string Name => name;
+        public double Duration => duration;
+        public string CoursePlan => coursePlan;
+        public string Room => room;
+
 
 
 
