@@ -35,11 +35,11 @@
         }
 
         public void Login()
-        {}
+        { }
         public void ChangePassword()
-        {}
+        { }
         public void ChangeAdress()
-        {}
+        { }
 
         public override string ToString() //Improve upon it
         {
