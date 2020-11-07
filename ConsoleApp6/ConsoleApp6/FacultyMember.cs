@@ -9,9 +9,11 @@ namespace Project
     // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
     class FacultyMember : User
     {
-        List<Course> courses = new List<Course>();
+        public List<Course> courses = new List<Course>();
 
-        public FacultyMember(List<Course> courses)
+
+
+        public FacultyMember(List<Course> courses, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
             this.courses = courses;
         }
