@@ -12,13 +12,12 @@ namespace Project
         List<Course> classes = new List<Course>();
         int year;
         List<int> payment = new List<int>();
-        List<List<int>> notes = new List<List<int>>();
+        public List<List<int>> notes = new List<List<int>>();
         List<bool> attendance = new List<bool>();
 
         public List<bool> Attendance => attendance;
-        public List<int> Payment => payment;
 
-        public Student(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance)
+        public Student(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
             this.classes = classes;
             this.year = year;
@@ -33,7 +32,10 @@ namespace Project
         }
         public void ToStringAttendance()
         {
-            Console.WriteLine(attendance);
+            for (int i = 0; i < attendance.Count; i++)
+            {
+                Console.WriteLine(attendance[i]);
+            }
         }
         public void ToStringNotes()
         {
@@ -50,7 +52,11 @@ namespace Project
         }
         public void ToStringCourses()
         {
-            Console.WriteLine("You are registered to the following courses : " + classes);
+            Console.WriteLine("You are registered to the following courses : ");
+            for (int i = 0; i < classes.Count; i++)
+            {
+                Console.WriteLine(classes[i].Name);
+            }
         }
     }
 }
