@@ -12,6 +12,7 @@ namespace Project
         static void Main(string[] args)
         {
             int yoo = 2;
+            int blabla;
         }
     }
 }
