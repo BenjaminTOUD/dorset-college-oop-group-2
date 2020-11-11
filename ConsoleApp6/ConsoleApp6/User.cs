@@ -40,16 +40,18 @@ namespace Project
             set { phoneNumber = value; }
         }
 
-        public void Login()
-        { }
-        public void ChangePassword()
-        { }
-        public void ChangeAdress()
-        { }
-
-        public override string ToString() //Improve upon it
+        public bool Login(string passInput)
         {
-            return name;
+            return passInput == password;
+        }
+        public void ChangePassword(string newPass)
+        { password = newPass; }
+        public void ChangeAdress(string newAdress)
+        { adress = newAdress; }
+
+        public override string ToString()
+        {
+            return $"Student card : Name : {name} Student ID : {ID} Signed up the : {inscriptionDate}";
         }
     }
 }
