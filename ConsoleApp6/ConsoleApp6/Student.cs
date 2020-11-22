@@ -23,6 +23,7 @@ namespace Project
             set { this.payment = value; }
         }
 
+        // constructor with all the student's information
         public Student(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
             this.classes = classes;
@@ -32,22 +33,22 @@ namespace Project
             this.attendance = attendance;
         }
 
-        public void RegisterCourse(Course course)
+        public void RegisterCourse(Course course) // allows a student to register for courses
         {
             classes.Add(course);
         }
-        public void ToStringAttendance()
+        public void ToStringAttendance() // displays the attendances of the student
         {
             for (int i = 0; i < attendance.Count; i++)
             {
                 Console.WriteLine(attendance[i]);
             }
         }
-        public void ToStringNotes()
+        public void ToStringNotes() // displays his notes
         {
             Console.WriteLine(notes);
         }
-        public void ToStringPayment()
+        public void ToStringPayment() // allows the student to pay the tuition fees
         {
             int paid = 0;
             for (int i = 0; i < payment.Count; i++)
@@ -56,7 +57,7 @@ namespace Project
             }
             Console.WriteLine("You have paid £" + paid);
         }
-        public void ToStringCourses()
+        public void ToStringCourses() // displays the courses in which he is enrolled
         {
             Console.WriteLine("You are registered to the following courses : ");
             for (int i = 1; i < classes.Count; i++)
