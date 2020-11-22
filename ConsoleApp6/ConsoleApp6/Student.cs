@@ -36,17 +36,25 @@ namespace Project
         public void RegisterCourse(Course course) // allows a student to register for courses
         {
             classes.Add(course);
+            Console.WriteLine("You just have registered for the following course : " + course);
         }
         public void ToStringAttendance() // displays the attendances of the student
         {
             for (int i = 0; i < attendance.Count; i++)
             {
-                Console.WriteLine(attendance[i]);
+                if(attendance[i]==false)
+                {
+                    Console.WriteLine("You were absent");
+                }
+                else if(attendance[i]==true)
+                {
+                    Console.WriteLine("You were present");
+                }
             }
         }
         public void ToStringNotes() // displays his notes
         {
-            Console.WriteLine(notes);
+            Console.WriteLine("Here are your notes : " + notes);
         }
         public void ToStringPayment() // allows the student to pay the tuition fees
         {
@@ -59,7 +67,7 @@ namespace Project
         }
         public void ToStringCourses() // displays the courses in which he is enrolled
         {
-            Console.WriteLine("You are registered to the following courses : ");
+            Console.WriteLine("You are registered for the following courses : ");
             for (int i = 1; i < classes.Count; i++)
             {
                 Console.WriteLine(classes[i].Name);
