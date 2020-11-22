@@ -16,11 +16,14 @@ namespace Project
         //creating a course 
         public void CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
         {
-            new Course(name, duration, coursePlan, prof, room, clas);
-            Console.WriteLine($"the course {name} has been created");   //confirmation that the course has been created
+            Console.WriteLine($"What course do you want to create ?\n> ");
+            string theName = Convert.ToString(Console.ReadLine());
+            Course a = new Course(name, duration, coursePlan, prof, room, clas);
+            a.Name = theName;
+            Console.WriteLine($"the course {a.Name} has been created");   //confirmation that the course has been created
         }
         //Creating and displaying a timetable
-        public void CreateTT(List<Course> course)
+        public void CreateTT(Student aStudent)
         {
             string[,] newTT = new string[6, 6];
             //filling the first line
@@ -48,7 +51,7 @@ namespace Project
             int day = -1;
             int hour = -1;
             //Placing the courses using random generators
-            foreach (Course aCourse in course)
+            foreach (Course aCourse in aStudent.classes)
             {
                 day = generator.Next(1, 6);  //generating the day
                 int count = 0;
@@ -98,8 +101,10 @@ namespace Project
         //create a student 
         public void AddStudent(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber)
         {
+            Console.WriteLine($"What is the name of the student you want to add ?");
+            string theName = Convert.ToString(Console.ReadLine());
             new Student(classes, year, payment, notes, attendance, ID, name, password, adress, inscriptionDate, phoneNumber);
-            Console.WriteLine($"the student : {Name} has been added");  //confirmation that the student has been created
+            Console.WriteLine($"the student : {theName} has been added");  //confirmation that the student has been created
         }
     }
 }
