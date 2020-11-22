@@ -11,9 +11,9 @@ namespace Project
     
  class Tutor:FacultyMember         //This class inherit from FacultyMember, which is already inherited from user
         {
-            public List<Course> courseList;        //Represent the list of courses that the Faculty member can teach
+            List<Course> courseList; //Represent the list of courses that the Faculty member can teach
 
-            public Tutor(List<Course> courseList, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)     //Constructor
+            public Tutor(List<Course> courseList, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(courseList, ID, name, password, adress, inscriptionDate, phoneNumber)     //Constructor
             {
                 this.courseList = courseList;
             }
@@ -55,4 +55,3 @@ namespace Project
 
             }
         }
-}
