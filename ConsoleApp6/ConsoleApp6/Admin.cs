@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Project
 {
@@ -11,9 +12,15 @@ namespace Project
         // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
         public Admin(int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
+            string path = "./Admin.txt";
+            using (StreamWriter sw = File.AppendText(path))
+            {
+
+                sw.WriteLine($"{ID},{name},{password},{adress},{inscriptionDate},{phoneNumber}");
+            }
 
         }
-        //creating a course 
+        //creating a course and saving the course in a text file
         public void CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
         {
             Console.WriteLine($"What course do you want to create ?\n> ");
@@ -21,6 +28,17 @@ namespace Project
             Course a = new Course(name, duration, coursePlan, prof, room, clas);
             a.Name = theName;
             Console.WriteLine($"the course {a.Name} has been created");   //confirmation that the course has been created
+            string path = "./Course.txt";
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.Write($"{name},{duration},{coursePlan},{prof.Name},{room},");
+                foreach (Student studentTest in clas)
+                {
+                    sw.Write(studentTest.Name + " ");
+                }
+                sw.WriteLine();
+            }
+
         }
         //Creating and displaying a timetable
         public void CreateTT(Student aStudent)
@@ -103,8 +121,33 @@ namespace Project
         {
             Console.WriteLine($"What is the name of the student you want to add ?");
             string theName = Convert.ToString(Console.ReadLine());
-            new Student(classes, year, payment, notes, attendance, ID, name, password, adress, inscriptionDate, phoneNumber);
+            Student a = new Student(classes, year, payment, notes, attendance, ID, name, password, adress, inscriptionDate, phoneNumber);
+            a.Name = theName;
             Console.WriteLine($"the student : {theName} has been added");  //confirmation that the student has been created
+            string path = "./Student.txt";
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                foreach (Course aCourse in classes)
+                {
+                    sw.Write(aCourse.Name + " ");
+                }
+                sw.Write($",{year},");
+                foreach (int aPayment in payment)
+                {
+                    sw.Write(aPayment + " ");
+                }
+                sw.Write($",");
+                //foreach (int aNote in notes[0])
+                //{
+                //    sw.Write(aNote + " ");
+                //}
+                sw.Write($",");
+                foreach (bool theAttendance in attendance)
+                {
+                    sw.Write(theAttendance + " ");
+                }
+                sw.WriteLine($",{ID},{name},{password},{adress},{inscriptionDate},{phoneNumber}");
+            }
         }
     }
 }
