@@ -1,0 +1,1343 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+using System.IO;
+
+namespace Main_projet
+{
+    class Program
+    {
+        // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
+        public abstract class User //User is abstract - it can only be created as a Student, Tutor, Admin, or FacultyMember
+        {                          //There fore it has no constructor.
+                                   //Attributes, things common to all Users - clear and simple attribute names
+            #region Attributes                     
+            public int ID;
+            public string name;
+            public string password;
+            public string adress;
+            public string inscriptionDate;
+            public string phoneNumber;
+            #endregion
+            //Public Properties for User to work in tandem with its inherited classes
+            //only get. Sets are handled through methods for some attributes only
+            #region Properties
+            public string Name
+            {
+                get { return name; }
+
+            }
+
+            public string Adress
+            {
+                get { return adress; }
+            }
+
+            public string InscriptionDate
+            {
+                get { return inscriptionDate; }
+            }
+
+            public string PhoneNumber
+            {
+                get { return phoneNumber; }
+            }
+
+            public User(int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber)
+            {
+                this.ID = ID;
+                this.name = name;
+                this.password = password;
+                this.adress = adress;
+                this.inscriptionDate = inscriptionDate;
+                this.phoneNumber = phoneNumber;
+            }
+            #endregion
+            //User-wide methods
+            #region Methods
+            public bool Login(string passInput) //Simple logging in attempt - will return false if the input is different to the registered password
+            {
+                return passInput == password;
+            }
+            public void ChangePassword(string newPass) //Changes the password attribute into the input string
+            { password = newPass; }
+            public void ChangeAdress(string newAdress) //Changes the adresss attribute into the input string
+            { adress = newAdress; }
+
+            public override string ToString() //User-Wide ToString method - Only outputs User available data, without phone number and adress
+            {
+                return $"User card : Name : {name} Student ID : {ID} Signed up the : {inscriptionDate}";
+            }
+
+            #endregion
+        }
+
+        class Admin : User
+        {
+            // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
+            public Admin(int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
+            {
+                
+
+            }
+            //creating a course and saving the course in a text file
+            public Course CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
+            {
+                Console.WriteLine($"What course do you want to create ?\n> ");
+                string theName = Convert.ToString(Console.ReadLine());
+                Course a = new Course(name, duration, coursePlan, prof, room, clas);
+                a.Name = theName;
+                Console.WriteLine($"the course {a.Name} has been created");   //confirmation that the course has been created
+                string path = "./Course.txt";
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.Write($"{name},{duration},{coursePlan},{prof.Name},{room},");
+                    foreach (Student studentTest in clas)
+                    {
+                        sw.Write(studentTest.Name + " ");
+                    }
+                    sw.WriteLine();
+                }
+                return a;
+
+            }
+            //Creating and displaying a timetable
+            public void CreateTT(Student aStudent)
+            {
+                string[,] newTT = new string[6, 6];
+                //filling the first line
+                newTT[0, 0] = "     ";
+                newTT[0, 1] = "Monday";
+                newTT[0, 2] = "Tuesday";
+                newTT[0, 3] = "Wednesday";
+                newTT[0, 4] = "Thursday";
+                newTT[0, 5] = "Friday";
+                //filling the first column
+                for (int i = 1; i < 6; i++)
+                {
+                    newTT[i, 0] = $"{8 + 2 * (i - 1)}h";
+                    //Adding spaces to have a beautiful timetable on the console
+                    while (newTT[i, 0].Length != 5)
+                    {
+                        newTT[i, 0] += " ";
+                    }
+                    while (newTT[0, i].Length != 10)
+                    {
+                        newTT[0, i] += " ";
+                    }
+                }
+                Random generator = new Random();
+                int day = -1;
+                int hour = -1;
+                //Placing the courses using random generators
+                foreach (Course aCourse in aStudent.classes)
+                {
+                    day = generator.Next(1, 6);  //generating the day
+                    int count = 0;
+                    for (int i = 1; i < 6; i++)
+                    {
+                        if (newTT[i, day] != null) count++; //counting the number of courses a day to have at most 3 classes everyday 
+                    }
+                    if (count < 3)
+                    {
+                        do
+                        {
+                            hour = generator.Next(1, 6);    //generating the hour
+                        } while (newTT[hour, day] != null);
+                        newTT[hour, day] = aCourse.Name;    //adding the name of the course in the timetable
+                                                            //adding spaces
+                        while (newTT[hour, day].Length != 10)
+                        {
+                            newTT[hour, day] += " ";
+                        }
+                    }
+                }
+                //Writing on the console
+                for (int i = 0; i < newTT.GetLength(0); i++)
+                {
+                    for (int j = 0; j < newTT.GetLength(1); j++)
+                    {
+                        if (newTT[i, j] != null) Console.Write($"{newTT[i, j]}");
+                        else
+                        {
+                            Console.Write(new string(' ', newTT[0, j].Length)); //Filling blanks with spaces in order not to shift the timetable
+                        }
+                    }
+                    Console.WriteLine();
+                }
+            }
+            //function that shows every payment a student made
+            public void TrackPayment(Student student)
+            {
+                int totalPayment = 0;
+                foreach (int item in student.Payment)   //display a list of every payment
+                {
+                    Console.WriteLine(item);
+                    totalPayment += item;
+                }
+                Console.WriteLine($"-----------------------------\nThe total amount is  : {totalPayment}"); //display the total amount spent
+            }
+            //create a student 
+            public Student AddStudent(List<Course> classes, int year, List<int> payment, List<List<double>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber)
+            {
+                
+                Student a = new Student(classes, year, payment, notes, attendance, ID, name, password, adress, inscriptionDate, phoneNumber);
+                a.name = name;
+                List<double> list = new List<double>();
+                notes.Add(list);
+                Console.WriteLine($"the student : {name} has been added");  //confirmation that the student has been created
+                string path = "./Student.txt";
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    foreach (Course aCourse in classes)
+                    {
+                        sw.Write(aCourse.Name + " ");
+                    }
+                    sw.Write($",{year},");
+                    foreach (int aPayment in payment)
+                    {
+                        sw.Write(aPayment + " ");
+                    }
+                    sw.Write($",");
+                    //foreach (int aNote in notes[0])
+                    //{
+                    //    sw.Write(aNote + " ");
+                    //}
+                    sw.Write($",");
+                    foreach (bool theAttendance in attendance)
+                    {
+                        sw.Write(theAttendance + " ");
+                    }
+                    sw.WriteLine($",{ID},{name},{password},{adress},{inscriptionDate},{phoneNumber}");
+                }
+                return a;
+            }
+        }
+
+
+
+        public class FacultyMember : User
+        {
+            public List<Course> courses = new List<Course>();
+
+
+
+            public FacultyMember(List<Course> courses, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
+            {
+                this.courses = courses;
+            }
+
+
+            public double GradeAStudent(Student student)
+            {
+                double grade = 0;
+                Console.WriteLine("Which grade would you assign to" + student);
+                grade = Convert.ToInt32(Console.ReadLine());
+                student.notes[0].Add(grade);
+                return grade;
+            }
+
+            public void AttendThere(Student student)
+            {
+                bool attendance = true;
+                student.Attendance.Add(attendance);
+                Console.WriteLine(student.name + " is present.");
+            }
+            public void AttendAbsent(Student student)
+            {
+                bool attendance = false;
+                student.Attendance.Add(attendance);
+                Console.WriteLine(student.name + " is absent.");
+            }
+
+            public void CreateExam()
+            {
+                /// ? 
+            }
+
+            public void EditCoursePlan(Course course)
+            {
+                Console.WriteLine("There is the actual courseplan :");
+                Console.WriteLine(course.CoursePlan);
+                Console.WriteLine();
+                Console.WriteLine("Type the new courseplan : ");
+                course.CoursePlan = Console.ReadLine();
+                Console.WriteLine("There is the new courseplan");
+                Console.WriteLine(course.CoursePlan);
+                Console.ReadKey();
+            }
+
+
+
+            public void ToString()
+            {
+                Console.WriteLine("Name : " + name + ", ID : " + ID + ", Inscription Date : " + inscriptionDate);
+            }
+
+        }
+
+        public class Student : User
+        {
+            public List<Course> classes = new List<Course>();
+            public int year;
+            public List<int> payment = new List<int>();
+            public List<List<double>> notes = new List<List<double>>();
+            public List<bool> attendance = new List<bool>();
+            public List<bool> Attendance => attendance;
+
+            public List<int> Payment
+            {
+                get { return payment; }
+                set { this.payment = value; }
+            }
+
+            // constructor with all the student's information
+            public Student(List<Course> classes, int year, List<int> payment, List<List<double>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
+            {
+                this.classes = classes;
+                this.year = year;
+                this.payment = payment;
+                this.notes = notes;
+                this.attendance = attendance;
+            }
+
+            public void RegisterCourse(Course course) // allows a student to register for courses
+            {
+                classes.Add(course);
+                course.clas.Add(this);
+                Console.WriteLine("You just have registered for the following course : " + course.name);
+            }
+            public void ToStringAttendance() // displays the attendances of the student
+            {
+                int absent = 0;
+                int present = 0;
+                for (int i = 0; i < attendance.Count; i++)
+                {
+                    if (attendance[i] == false)
+                    {
+                        Console.WriteLine(i + " : You were absent");
+                        absent++;
+                    }
+                    else if (attendance[i] == true)
+                    {
+                        Console.WriteLine(i + " : You were present");
+                        present++;
+                    }
+                }
+                Console.WriteLine("You have been absent for " + absent + " courses out of " + attendance.Count + ".");
+            }
+            public void ToStringNotes() // displays his notes
+            {
+                Console.WriteLine("Here are your notes : ");
+                for (int i = 0; i < notes[0].Count; i++)
+                {
+                    Console.WriteLine(notes[0][i]);
+                }
+            }
+            public void ToStringPayment() // allows the student to pay the tuition fees
+            {
+                int paid = 0;
+                for (int i = 0; i < payment.Count; i++)
+                {
+                    paid += payment[i];
+                }
+                Console.WriteLine("You have paid £" + paid);
+            }
+            public void ToStringCourses() // displays the courses in which he is enrolled
+            {
+                Console.WriteLine("You are registered for the following courses : ");
+                for (int i = 0; i < classes.Count; i++)
+                {
+                    Console.WriteLine(classes[i].name);
+                }
+            }
+
+            public void ToString()
+            {
+                Console.WriteLine("Name : " + name + ", ID : " + ID + ", Inscription Date : " + inscriptionDate);
+            }
+        }
+
+        public class Tutor : FacultyMember         //This class inherit from FacultyMember, which is already inherited from user
+        {
+            public List<Course> courseList; //Represent the list of courses that the Faculty member can teach
+
+            public Tutor(List<Course> courseList, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(courseList, ID, name, password, adress, inscriptionDate, phoneNumber)     //Constructor
+            {
+                this.courseList = courseList;
+            }
+
+            public int[] IsStudent(Student student)   //Check if the student is a class of the tutor
+            {
+                int[] result = new int[2];
+                result[0] = -1;
+                result[1] = -1;                                   // A vector is initialized at -1;-1 . It will be the result if the student is not in the tutor's list
+                for (int i = 0; i < this.courseList.Count; i++)
+                {
+                    for (int j = 0; j < courseList[i].clas.Count; j++)     //Going all the way through the students of the tutor
+                    {
+                        if (courseList[i].clas[j].name == student.name)             //If the student appears in a class
+                        {
+                            result[0] = i;
+                            result[1] = j;                   //We get the coordinate of him in the files
+                            break;
+                        }
+                    }
+                }
+                return result;
+            }
+
+            public void StudentDetail(Student student)           //To get personal details of a student
+            {
+                if (IsStudent(student)[0] == -1)                //Checking if the student is in a class of the tutor
+                {
+                    Console.WriteLine("This student is not in any of your courses");
+                }
+
+                else
+                {
+                    int i = IsStudent(student)[0];
+                    int j = IsStudent(student)[1];                      //If we find him in a class
+                    Console.WriteLine("ID : " + courseList[i].clas[j].ID + ", Name: " + courseList[i].clas[j].Name + ", Adress : " + courseList[i].clas[j].Adress + ", Phone : " + courseList[i].clas[j].PhoneNumber);        //Printing the personal details of the student
+                }
+
+            }
+
+            public void TeachACourse(string name, List<Course> courses)
+            {
+
+                if (CheckCourse(name, courses) != -1)
+                {
+                    this.courses.Add(courses[CheckCourse(name, courses)]);
+                    Console.WriteLine("You are now teaching " + courses[CheckCourse(name, courses)].name + ".");
+                }
+                if (CheckCourse(name, courses) == -1)
+                {
+                    Console.WriteLine("This course doesn't exist");
+                }
+            }
+
+        }
+        public class Course
+
+        {
+            public string name;
+            public double duration;
+            public string coursePlan;
+            public FacultyMember prof;
+            public string room;
+            public List<Student> clas;
+
+            public Course(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
+            {
+                this.name = name;
+                this.duration = duration;
+                this.coursePlan = coursePlan;
+                this.prof = prof;
+                this.room = room;
+                this.clas = clas;
+            }
+
+            public string Name { get; set; }
+            public double Duration => duration;
+            public string CoursePlan { get; set; }
+            public string Room => room;
+
+            public string toStringCoursePlan()
+            {
+                return "The course name  is : " + name + ", the course duration is : " + duration + " minutes, the professor is :" + prof.Name + " and the course will be in room : " + room;
+            }
+        }
+
+        static int[] IsRegistered(int ID, List<Student> Students, List<FacultyMember> Teachers, List<Tutor> Tutors, List<Admin> Admins)
+        {
+            int[] result = { 0, 0 };
+            for (int i = 0; i < Students.Count; i++)
+            {
+                if (Students[i].ID == ID)
+                {
+                    result[0] = 1;
+                    result[1] = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < Teachers.Count; i++)
+            {
+                if (Teachers[i].ID == ID)
+                {
+                    result[0] = 2;
+                    result[1] = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < Tutors.Count; i++)
+            {
+                if (Tutors[i].ID == ID)
+                {
+                    result[0] = 3;
+                    result[1] = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < Admins.Count; i++)
+            {
+                if (Admins[i].ID == ID)
+                {
+                    result[0] = 4;
+                    result[1] = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        static int CheckPassword(string password, int category, int position, List<Student> Students, List<FacultyMember> Teachers, List<Tutor> Tutors, List<Admin> Admins)
+        {
+            int result = 0;
+            if (category == 1)
+            {
+                if (Students[position].password == password)
+                {
+                    result = 1;
+                }
+            }
+            if (category == 2)
+            {
+                if (Teachers[position].password == password)
+                {
+                    result = 1;
+                }
+            }
+            if (category == 3)
+            {
+                if (Tutors[position].password == password)
+                {
+                    result = 1;
+                }
+            }
+            if (category == 4)
+            {
+                if (Admins[position].password == password)
+                {
+                    result = 1;
+                }
+            }
+            return result;
+        }
+
+
+        static int CheckCourse(string name, List<Course> Courses)
+        {
+            int result = -1;
+            for (int i = 0; i < Courses.Count; i++)
+            {
+                if (Courses[i].name == name)
+                {
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        static int CheckStudent(string name, List<Student> Students)
+        {
+            int result = -1;
+            for (int i = 0; i < Students.Count; i++)
+            {
+                if (Students[i].name == name)
+                {
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        static int CheckSTeacher(string name, List<FacultyMember> Teachers)
+        {
+            int result = -1;
+            for (int i = 0; i < Teachers.Count; i++)
+            {
+                if (Teachers[i].name == name)
+                {
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        static string[][] FileToArray(string path)
+        {
+
+            string[] txtFileLines = File.ReadAllLines(path);
+            string[][] txtFileContent = new string[txtFileLines.Length][];
+            for (int i = 0; i < txtFileLines.Length; i++)
+            {
+                txtFileContent[i] = txtFileLines[i].Split(',');
+            }
+            return txtFileContent;
+        }
+
+        static void ListToStudent(string[][] tabstud,List<Student> Students)
+        {
+            for (int i = 0; i < tabstud.Length; i++)
+            {
+                for (int j = -11; j < tabstud[i].Length - 11; j = j + 11)
+                {
+                  
+                    int ide = Convert.ToInt32(tabstud[i][j + 16]);
+
+                    string name = tabstud[i][j + 17];
+                    string password = tabstud[i][j + 18];
+                    string adress = tabstud[i][j + 19];
+                    string date = tabstud[i][j + 20];
+                    string number = tabstud[i][j + 21];
+                    List<double> list2 = new List<double>();
+                    List<List<double>> list = new List<List<double>>();
+                    list.Add(list2);
+                    Students.Add(new Student(new List<Course>(), 2, new List<int>(), new List<List<double>>(), new List<bool>(), ide, name, password, adress, date, number));
+                }
+            }
+        }
+
+        static void ListToAdmin(string[][] tabadmin, List<Admin> Admins)
+        {
+            for (int i = 0; i < tabadmin.Length; i++)
+            {
+                for (int j = -6; j < tabadmin[i].Length - 6; j = j + 6)
+                {
+                    int ide = Convert.ToInt32(tabadmin[i][j + 6]);
+
+                    string name = tabadmin[i][j + 7];
+                    string password = tabadmin[i][j + 8];
+                    string adress = tabadmin[i][j + 9];
+                    string date = tabadmin[i][j + 10];
+                    string number = tabadmin[i][j + 11];
+                    Admins.Add(new Admin(ide, name, password, adress, date, number));
+                }
+            }
+        }
+
+        static void ListToteach(string[][] tabteach, List<FacultyMember> Teachers)
+        {
+            for (int i = 0; i < tabteach.Length; i++)
+            {
+                for (int j = -6; j < tabteach[i].Length - 8; j = j + 8)
+                {
+                    int ide = Convert.ToInt32(tabteach[i][j + 8]);
+
+                    string name = tabteach[i][j + 9];
+                    string password = tabteach[i][j + 10];
+                    string adress = tabteach[i][j + 11];
+                    string date = tabteach[i][j + 12];
+                    string number = tabteach[i][j + 13];
+                    Teachers.Add(new FacultyMember(new List<Course>(), ide, name, password, adress, date, number));
+                }
+            }
+        }
+
+        static void ListToTut(string[][] tabtu, List<Tutor> Tutors)
+        {
+            for (int i = 0; i < tabtu.Length; i++)
+            {
+                for (int j = -6; j < tabtu[i].Length - 8; j = j + 8)
+                {
+                    int ide = Convert.ToInt32(tabtu[i][j + 8]);
+
+                    string name = tabtu[i][j + 9];
+                    string password = tabtu[i][j + 10];
+                    string adress = tabtu[i][j + 11];
+                    string date = tabtu[i][j + 12];
+                    string number = tabtu[i][j + 13];
+                    Tutors.Add(new Tutor(new List<Course>(), ide, name, password, adress, date, number));
+                }
+            }
+        }
+
+        static void ListToCourse(string[][] tabcourse, List<Course> Courses,List<FacultyMember> Teachers)
+        {
+            for (int i = 0; i < tabcourse.Length; i++)
+            {
+                for (int j = -5; j < tabcourse[i].Length - 5; j = j + 5)
+                {
+                    //string name, double duration, string coursePlan, FacultyMember prof, string room
+
+                    string name = tabcourse[i][j + 5];
+                    double duration = Convert.ToInt32(tabcourse[i][j + 6]);
+                    string coursePlan = tabcourse[i][j + 7];
+                    string tname = tabcourse[i][j + 8];
+                    string room = tabcourse[i][j + 9];
+
+                    Courses.Add(new Course(name, duration, coursePlan, Teachers[CheckSTeacher(tname, Teachers)], room, new List<Student>()));
+                }
+            }
+        }
+
+        static void SaveEverything(List<Student> Students,List<FacultyMember> Teachers,List<Tutor> Tutors,List<Admin> Admins,List<Course> Courses)
+        {
+            StreamWriter writer = new StreamWriter("./Student.txt", false);
+            writer.Close();
+            StreamWriter writer2 = new StreamWriter("./FacultyMember.txt", false);
+            writer2.Close();
+            StreamWriter writer3 = new StreamWriter("./Tutor.txt", false);
+            writer3.Close();
+            StreamWriter writer4 = new StreamWriter("./Admin.txt", false);
+            writer4.Close();
+            StreamWriter writer5 = new StreamWriter("./Course.txt", false);
+            writer5.Close();
+            for (int i = 0; i < Students.Count(); i++)
+            {
+                using (StreamWriter sw = File.AppendText("./Student.txt"))
+                {
+                    foreach (Course aCourse in Students[i].classes)
+                    {
+                        sw.Write(aCourse.name + " ");
+                    }
+                    sw.Write($",{Students[i].year},");
+                    foreach (int aPayment in Students[i].payment)
+                    {
+                        sw.Write(aPayment + " ");
+                    }
+                    sw.Write($",");
+                    //foreach (int aNote in notes[0])
+                    //{
+                    //    sw.Write(aNote + " ");
+                    //}
+                    sw.Write($",");
+                    foreach (bool theAttendance in Students[i].attendance)
+                    {
+                        sw.Write(theAttendance + " ");
+                    }
+                    sw.WriteLine($",{Students[i].ID},{Students[i].name},{Students[i].password},{Students[i].adress},{Students[i].inscriptionDate},{Students[i].phoneNumber}");
+                }
+            }
+            for (int i = 0; i < Teachers.Count(); i++)
+            {
+                using (StreamWriter sw = File.AppendText("./FacultyMember.txt"))
+                {
+                    foreach (Course aCourse in Teachers[i].courses)
+                    {
+                        sw.Write(aCourse.name + " ");
+                    }
+                    sw.Write($",");
+                    sw.WriteLine($",{Teachers[i].ID},{Teachers[i].name},{Teachers[i].password},{Teachers[i].adress},{Teachers[i].inscriptionDate},{Teachers[i].phoneNumber}");
+                }
+            }
+            for (int i = 0; i < Tutors.Count(); i++)
+            {
+                using (StreamWriter sw = File.AppendText("./Tutor.txt"))
+                {
+                    foreach (Course aCourse in Tutors[i].courses)
+                    {
+                        sw.Write(aCourse.name + " ");
+                    }
+
+                    sw.Write($",");
+
+                    sw.WriteLine($",{Tutors[i].ID},{Tutors[i].name},{Tutors[i].password},{Tutors[i].adress},{Tutors[i].inscriptionDate},{Tutors[i].phoneNumber}");
+                }
+            }
+            for (int i = 0; i < Admins.Count(); i++)
+            {
+                using (StreamWriter sw = File.AppendText("./Admin.txt"))
+                {
+                    sw.WriteLine($"{Admins[i].ID},{Admins[i].name},{Admins[i].password},{Admins[i].adress},{Admins[i].inscriptionDate},{Admins[i].phoneNumber}");
+                }
+            }
+            for (int i = 0; i < Courses.Count(); i++)
+            {
+                using (StreamWriter sw = File.AppendText("./Course.txt"))
+                {
+                    //string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas
+                    sw.WriteLine($"{Courses[i].name},{Courses[i].duration},{Courses[i].coursePlan},{Courses[i].prof.name},{Courses[i].room}");
+                }
+            }
+        }
+
+        static void VGC()
+        {
+            Console.Clear();
+            for (int i = 0; i < 70; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine("Virtual Global College Platform 2020");
+            for (int i = 0; i < 15; i++)
+            {
+                Console.WriteLine();
+            }
+
+            for (int i = 0; i < 78; i++)
+            {
+                Console.Write(" ");
+            }
+        }
+
+        static void NotRegistered(int ID,List<Student> Students,List<FacultyMember> Teachers,List<Tutor> Tutors,List<Admin> Admins)
+        {
+            if (IsRegistered(ID, Students, Teachers, Tutors, Admins)[0] == 0)
+            {
+                for (int i = 0; i < 78; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine("You are not registered.");
+                for (int i = 0; i < 78; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+
+        }
+
+        static void InvalidPassword()
+        {
+            for (int i = 0; i < 78; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine("Invalid password");
+            for (int i = 0; i < 78; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
+
+        static void Main(string[] args)
+        {
+            //List<Course> tab = new List<Course>();
+            //List<Course> tab2 = new List<Course>();
+            //List<int> pay = new List<int>();
+            //List<List<double>> notes = new List<List<double>>();
+            //List<List<double>> note = new List<List<double>>();
+            //List<double> po = new List<double>();
+            //List<double> pos = new List<double>();
+            //notes.Add(po);
+            //note.Add(pos);
+            //List<bool> att = new List<bool>();
+            //List<Student> classe = new List<Student>();
+            //FacultyMember prof = new FacultyMember(tab, 13, "Clain", "esilv", "chien", "Versailles", "ESILV");
+            //Tutor PP = new Tutor(tab, 12, "thai", "esilv", "info", "math", "03");
+            //Student stud = new Student(tab, 3, pay, notes, att, 1, "foucauld", "password", "La Clancheuse", "mai", "0667644678");
+            //Student student = new Student(tab, 2, pay, note, att, 2, "hugo", "mdp", "rambouillet", "janvier", "78900");
+            //Course math = new Course("math", 3, "math", prof, "math", classe);
+            string[][] tabstud = FileToArray("./Student.txt");
+            string[][] tabcourse = FileToArray("./Course.txt");
+            string[][] tabadmin = FileToArray("./Admin.txt");
+            string[][] tabteach = FileToArray("./FacultyMember.txt");
+            string[][] tabtu = FileToArray("./Tutor.txt");
+            List<Admin> Admins = new List<Admin>();
+            List<Student> Students = new List<Student>();
+            List<FacultyMember> Teachers = new List<FacultyMember>();
+            List<Tutor> Tutors = new List<Tutor>();
+            List<Course> Courses = new List<Course>();
+            Admin admin = new Admin(0, "admin", "admin", "Versailles", "26/11/2020", "0665232604");
+          
+            ListToAdmin(tabadmin, Admins);
+            ListToStudent(tabstud, Students);
+            ListToteach(tabteach, Teachers);
+            ListToTut(tabtu, Tutors);
+            ListToCourse(tabcourse, Courses, Teachers);
+            while (true)
+            {
+            Start:
+                SaveEverything(Students, Teachers, Tutors, Admins, Courses);
+                VGC();
+                Console.WriteLine("Type in your ID :");
+                for (int i = 0; i < 78; i++)
+                {
+                    Console.Write(" ");
+                }
+                int ID = Convert.ToInt32(Console.ReadLine());
+                Console.Beep();
+                int category = IsRegistered(ID, Students, Teachers, Tutors, Admins)[0];
+                int position = IsRegistered(ID, Students, Teachers, Tutors, Admins)[1];
+                if (IsRegistered(ID,Students,Teachers,Tutors,Admins)[0]!=0)
+                {
+                    VGC();
+                    Console.WriteLine("ID : " + ID + " is registered !");
+                    while (true)
+                    {
+                        for (int i = 0; i < 78; i++)
+                        {
+                            Console.Write(" ");
+                        }
+                        Console.WriteLine("Type in your password : ");
+                        for (int i = 0; i < 78; i++)
+                        {
+                            Console.Write(" ");
+                        }
+                        string password = Console.ReadLine();
+                        if(CheckPassword(password,category,position, Students, Teachers, Tutors, Admins)==1)
+                        {
+                            for (int i = 0; i < 78; i++)
+                            {
+                                Console.Write(" ");
+                            }
+                            Console.WriteLine("Password is correct");
+                            Console.Beep();
+                            Console.Clear();
+                            while(true)
+                            {
+                                for (int i = 0; i < 70; i++)
+                                {
+                                    Console.Write(" ");
+                                }
+                                Console.WriteLine("Virtual Global College Platform 2020");
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    Console.WriteLine();
+                                }
+                                switch (category)
+                                {
+                                    case 1:
+                                        { 
+                                            Console.WriteLine("1-Register for a course");
+                                            Console.WriteLine("2-Display attendance");
+                                            Console.WriteLine("3-Display notes");
+                                            Console.WriteLine("4-Display fees paid");
+                                            Console.WriteLine("5-Display courses you are in");
+                                            Console.WriteLine("6-Display your personal informations");
+                                            Console.WriteLine("7-Change your adress");
+                                            Console.WriteLine("8-Change your password");
+                                            Console.WriteLine("9-Exit");
+                                            int action = Convert.ToInt32(Console.ReadLine());
+                                            Console.Beep();
+                                            switch (action)
+                                            {
+                                                case 1:
+                                                    Console.Clear();
+                                                    Console.WriteLine("You already are in these courses :");
+                                                    Students[position].ToStringCourses();
+                                                    Console.WriteLine("For which course do you want to register ?");
+                                                    string course = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckCourse(course, Courses) != -1)
+                                                    { Students[position].RegisterCourse(Courses[CheckCourse(course, Courses)]); }
+                                                    if (CheckCourse(course, Courses) == -1)
+                                                    { Console.WriteLine("This course doesn't exist"); }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 2:
+                                                    Console.Clear();
+                                                    Students[position].ToStringAttendance();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 3:
+                                                    Console.Clear();
+                                                    Students[position].ToStringNotes();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 4:
+                                                    Console.Clear();
+                                                    Students[position].ToStringPayment();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 5:
+                                                    Console.Clear();
+                                                    Students[position].ToStringCourses();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 6:
+                                                    Console.Clear();
+                                                    Students[position].ToString();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 7:
+                                                    Console.WriteLine("Type in your new adress");
+                                                    string nadress = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Students[position].ChangeAdress(nadress);
+                                                    Console.Clear();
+                                                    break;
+                                                case 8:
+                                                    Console.WriteLine("Type in your new password");
+                                                    string npass = Console.ReadLine();
+                                                    Students[position].ChangePassword(npass);
+                                                    Console.Clear();
+                                                    break;
+                                                case 9:
+                                                    goto Start;
+                                            }
+                                        }
+                                        break;
+                                    case 2:
+                                        {
+                                            Console.WriteLine("1-Grade a student");
+                                            Console.WriteLine("2-Manage attendance");
+                                            Console.WriteLine("3-Create an exam");
+                                            Console.WriteLine("4-Edit your course plan");
+                                            Console.WriteLine("5-Display your personal informations");
+                                            Console.WriteLine("6-Change your adress");
+                                            Console.WriteLine("7-Change your password");
+                                            Console.WriteLine("8-Exit");
+                                            int action = Convert.ToInt32(Console.ReadLine());
+                                            Console.Beep();
+                                            switch (action)
+                                            {
+                                                case 1:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ?");
+                                                    string name = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckStudent(name, Students) != -1)
+                                                    {
+                                                        Teachers[position].GradeAStudent(Students[CheckStudent(name,Students)]);
+                                                    }
+                                                    if(CheckStudent(name,Students)==-1)
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ?");
+                                                    string attname = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckStudent(attname, Students) != -1)
+                                                    {
+                                                        Console.WriteLine("1-Present");
+                                                        Console.WriteLine("2-Absent");
+                                                        int choice = Convert.ToInt32(Console.ReadLine());
+                                                        Console.Beep();
+                                                        if(choice==1)
+                                                        {
+                                                            Teachers[position].AttendThere(Students[CheckStudent(attname, Students)]);
+                                                        }
+                                                        else if (choice == 2)
+                                                        {
+                                                            Teachers[position].AttendAbsent(Students[CheckStudent(attname, Students)]);
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Please choose 1 or 2. Press any key to continue.");
+                                                            Console.ReadKey();
+                                                            Console.Beep();
+                                                            Console.Clear();
+                                                        }
+                                                    }
+                                                    if (CheckStudent(attname, Students) == -1)
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 3:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Not available yet !");
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 4:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which course plan do you want to edit?");
+                                                    string namecourse = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Course course = Courses[CheckCourse(namecourse, Courses)];
+                                                    Teachers[position].EditCoursePlan(course);
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 5:
+                                                    Console.Clear();
+                                                    Teachers[position].ToString();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 6:
+                                                    Console.WriteLine("Type in your new adress");
+                                                    string nadress = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Teachers[position].ChangeAdress(nadress);
+                                                    Console.Clear();
+                                                    break;
+                                                case 7:
+                                                    Console.WriteLine("Type in your new password");
+                                                    string npass = Console.ReadLine();
+                                                    Teachers[position].ChangePassword(npass);
+                                                    Console.Clear();
+                                                    break;
+                                                case 8:
+                                                    goto Start;
+                                            }
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            Console.WriteLine("1-Grade a student");
+                                            Console.WriteLine("2-Manage attendance");
+                                            Console.WriteLine("3-Create an exam");
+                                            Console.WriteLine("4-Edit your course plan");
+                                            Console.WriteLine("5-Display your personal informations");
+                                            Console.WriteLine("6-Teach a new course");
+                                            Console.WriteLine("7-Display personal informations of a student");
+                                            Console.WriteLine("8-Change your adress");
+                                            Console.WriteLine("9-Change your password");
+                                            Console.WriteLine("10-Exit");
+                                            int action = Convert.ToInt32(Console.ReadLine());
+                                            Console.Beep();
+                                            switch (action)
+                                            {
+                                                case 1:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ?");
+                                                    string name = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckStudent(name, Students) != -1)
+                                                    {
+                                                        Tutors[position].GradeAStudent(Students[CheckStudent(name, Students)]);
+                                                        Students[CheckStudent(name, Students)].ToStringNotes();
+                                                    }
+                                                    if (CheckStudent(name, Students) == -1)
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ?");
+                                                    string attname = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckStudent(attname, Students) != -1)
+                                                    {
+                                                        Console.WriteLine("1-Present");
+                                                        Console.WriteLine("2-Absent");
+                                                        int choice = Convert.ToInt32(Console.ReadLine());
+                                                        Console.Beep();
+                                                        if (choice == 1)
+                                                        {
+                                                            Tutors[position].AttendThere(Students[CheckStudent(attname, Students)]);
+                                                        }
+                                                        else if (choice == 2)
+                                                        {
+                                                            Teachers[position].AttendAbsent(Students[CheckStudent(attname, Students)]);
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Please choose 1 or 2. Press any key to continue.");
+                                                            Console.ReadKey();
+                                                            Console.Beep();
+                                                            Console.Clear();
+                                                        }
+                                                    }
+                                                    if (CheckStudent(attname, Students) == -1)
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 3:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Not available yet!");
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 4:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which course plan do you want to edit?");
+                                                    string namecourse = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Course course = Courses[CheckCourse(namecourse, Courses)];
+                                                    Tutors[position].EditCoursePlan(course);
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 5:
+                                                    Console.Clear();
+                                                    Tutors[position].ToString();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 6:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which course do you want to teach ?");
+                                                    string namec = Console.ReadLine();
+                                                    Tutors[position].TeachACourse(namec, Courses);
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 7:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ? ");
+                                                    string sname = Console.ReadLine();
+                                                    if (CheckStudent(sname, Students) != -1)
+                                                    {
+                                                        Tutors[position].StudentDetail(Students[CheckStudent(sname,Students)]);
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("This student doesn't exists");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 8:
+                                                    Console.WriteLine("Type in your new adress");
+                                                    string nadress = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Tutors[position].ChangeAdress(nadress);
+                                                    Console.Clear();
+                                                    break;
+                                                case 9:
+                                                    Console.WriteLine("Type in your new password");
+                                                    string npass = Console.ReadLine();
+                                                    Tutors[position].ChangePassword(npass);
+                                                    Console.Clear();
+                                                    break;
+                                                case 10:
+                                                    goto Start;
+                                            }
+                                            break;
+                                        }
+                                    case 4:
+                                        {
+                                            Console.WriteLine("1-Create a course");
+                                            Console.WriteLine("2-Create a timetable");
+                                            Console.WriteLine("3-Track payment of a student");
+                                            Console.WriteLine("4-Add a student");
+                                            Console.WriteLine("5-Display your personal informations");
+                                            Console.WriteLine("6-Change your adress");
+                                            Console.WriteLine("7-Change your password");
+                                            Console.WriteLine("8-Exit");
+                                            int action = Convert.ToInt32(Console.ReadLine());
+                                            Console.Beep();
+                                            switch (action)
+                                            {
+                                                case 1:
+                                                    Console.Clear();   //string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas
+                                                    Console.WriteLine("Give a name to your course :");
+                                                    string name = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Console.WriteLine("What will be the duration of the course (in hours)? :");
+                                                    double duration = Convert.ToDouble(Console.ReadLine());
+                                                    Console.Beep();
+                                                    Console.WriteLine("Type in your course plan :");
+                                                    string courseplan = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Console.WriteLine("In which classroom will the course take place? :");
+                                                    string room = Console.ReadLine();
+                                                    Console.Beep();
+                                                    List<Student> clas = new List<Student>();
+                                                    Console.WriteLine("Name a teacher in charge of the course :");
+                                                    string tname = Console.ReadLine();
+                                                    Console.Beep();
+                                                    FacultyMember faculty;
+                                                    if (CheckSTeacher(tname, Teachers) != -1)
+                                                    {
+                                                        faculty = Teachers[CheckSTeacher(tname, Teachers)];
+                                                        Courses.Add(Admins[position].CreateCourse(name, duration, courseplan, faculty, room, new List<Student>()));
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("This teacher doesn't exist");
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student ?");
+                                                    string attname = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if (CheckStudent(attname, Students) != -1)
+                                                    {
+                                                        Admins[position].CreateTT(Students[position]);
+                                                    }
+                                                    if (CheckStudent(attname, Students) == -1)
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 3:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Which student's payment do you want to track? :");
+                                                    string sname = Console.ReadLine();
+                                                    Console.Beep();
+                                                    if(CheckStudent(sname,Students)!=-1)
+                                                    {
+                                                        Admins[position].TrackPayment(Students[CheckStudent(sname, Students)]);
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("This student doesn't exist");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 4:
+                                                    Console.Clear();
+                                                    Console.WriteLine("Type in an ID");
+                                                    int id = Convert.ToInt32(Console.ReadLine());
+                                                    Console.Beep();
+                                                    Console.WriteLine("Type in a name");
+                                                    string Name = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Console.WriteLine("Type in a password");
+                                                    string pasword = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Console.WriteLine("Type in an adress");
+                                                    string adress = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Console.WriteLine("Type in a phone number");
+                                                    string phone = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Students.Add(Admins[position].AddStudent(Courses, 2, new List<int>(), new List<List<double>>(), new List<bool>(), id, Name, pasword, adress, "26/11/2020",phone)); 
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 5:
+                                                    Console.Clear();
+                                                    Admins[position].ToString();
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    break;
+                                                case 6:
+                                                    Console.WriteLine("Type in your new adress");
+                                                    string nadress = Console.ReadLine();
+                                                    Console.Beep();
+                                                    Admins[position].ChangeAdress(nadress);
+                                                    Console.Clear();
+                                                    break;
+                                                case 7:
+                                                    Console.WriteLine("Type in your new password");
+                                                    string npass = Console.ReadLine();
+                                                    Admins[position].ChangePassword(npass);
+                                                    Console.Clear();
+                                                    break;
+                                                case 8:
+                                                    goto Start;
+                                            }
+                                            break;
+
+                                        }
+                                }
+                                
+                            }
+                        }
+                        else
+                        {
+                            InvalidPassword();
+                        }
+                    }
+                }
+                NotRegistered(ID, Students, Teachers, Tutors, Admins);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
