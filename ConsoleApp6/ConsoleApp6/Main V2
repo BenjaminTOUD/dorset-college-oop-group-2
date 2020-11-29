@@ -357,7 +357,7 @@ namespace Main_projet
 
             public void ToString()
             {
-                Console.WriteLine("Name : " + name + ", ID : " + ID + ", Inscription Date : " + inscriptionDate);
+                Console.WriteLine($"Name: {name}, ID: {ID}, Password: {password}, Adress: {adress}, Inscription Date: {inscriptionDate}, Phone number: {phoneNumber}");
             }
         }
 
