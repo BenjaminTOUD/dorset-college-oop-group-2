@@ -332,9 +332,9 @@ namespace Main_projet
             public void ToStringNotes() // displays his notes
             {
                 Console.WriteLine("Here are your notes : ");
-                for (int i = 0; i < notes[0].Count; i++)
+                for (int i = 0; i < notes.Count; i++)
                 {
-                    Console.WriteLine(notes[0][i]);
+                    Console.WriteLine(notes[i]);
                 }
             }
             public void ToStringPayment() // allows the student to pay the tuition fees
