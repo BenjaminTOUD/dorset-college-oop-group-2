@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project
+namespace Main_projet
 {
-    class Exam : Course
+    public class Exam : Course
     {
-        public Exam(string name, double duration, string coursePlan, FacultyMember prof, string room) : base(name,duration,coursePlan,prof,room)
+        public Exam(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas) : base(name, duration, coursePlan, prof, room, clas)
         {
 
         }
