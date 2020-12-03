@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Project
 {
@@ -12,21 +12,13 @@ namespace Project
         // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
         public Admin(int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
-            string path = "./Admin.txt";
-            using (StreamWriter sw = File.AppendText(path))
-            {
 
-                sw.WriteLine($"{ID},{name},{password},{adress},{inscriptionDate},{phoneNumber}");
-            }
 
         }
         //creating a course and saving the course in a text file
-        public void CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
+        public Course CreateCourse(string name, double duration, string coursePlan, FacultyMember prof, string room, List<Student> clas)
         {
-            Console.WriteLine($"What course do you want to create ?\n> ");
-            string theName = Convert.ToString(Console.ReadLine());
             Course a = new Course(name, duration, coursePlan, prof, room, clas);
-            a.Name = theName;
             Console.WriteLine($"the course {a.Name} has been created");   //confirmation that the course has been created
             string path = "./Course.txt";
             using (StreamWriter sw = File.AppendText(path))
@@ -38,6 +30,7 @@ namespace Project
                 }
                 sw.WriteLine();
             }
+            return a;
 
         }
         //Creating and displaying a timetable
@@ -56,11 +49,11 @@ namespace Project
             {
                 newTT[i, 0] = $"{8 + 2 * (i - 1)}h";
                 //Adding spaces to have a beautiful timetable on the console
-                while (newTT[i,0].Length != 5)
+                while (newTT[i, 0].Length != 5)
                 {
                     newTT[i, 0] += " ";
                 }
-                while (newTT[0,i].Length != 10)
+                while (newTT[0, i].Length != 10)
                 {
                     newTT[0, i] += " ";
                 }
@@ -83,7 +76,7 @@ namespace Project
                     {
                         hour = generator.Next(1, 6);    //generating the hour
                     } while (newTT[hour, day] != null);
-                    newTT[hour, day] = aCourse.Name;    //adding the name of the course in the timetable
+                    newTT[hour, day] = aCourse.name;    //adding the name of the course in the timetable
                                                         //adding spaces
                     while (newTT[hour, day].Length != 10)
                     {
@@ -117,13 +110,14 @@ namespace Project
             Console.WriteLine($"-----------------------------\nThe total amount is  : {totalPayment}"); //display the total amount spent
         }
         //create a student 
-        public void AddStudent(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber)
+        public Student AddStudent(List<Course> classes, int year, List<int> payment, List<List<double>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber)
         {
-            Console.WriteLine($"What is the name of the student you want to add ?");
-            string theName = Convert.ToString(Console.ReadLine());
+
             Student a = new Student(classes, year, payment, notes, attendance, ID, name, password, adress, inscriptionDate, phoneNumber);
-            a.Name = theName;
-            Console.WriteLine($"the student : {theName} has been added");  //confirmation that the student has been created
+            a.name = name;
+            List<double> list = new List<double>();
+            notes.Add(list);
+            Console.WriteLine($"the student : {name} has been added");  //confirmation that the student has been created
             string path = "./Student.txt";
             using (StreamWriter sw = File.AppendText(path))
             {
@@ -148,6 +142,14 @@ namespace Project
                 }
                 sw.WriteLine($",{ID},{name},{password},{adress},{inscriptionDate},{phoneNumber}");
             }
+            return a;
         }
+
+        public void ToString()
+        {
+            Console.WriteLine($"ID : {ID}, name : {name}, adress : {adress}, phone number : {phoneNumber}");
+        }
+
     }
+
 }
