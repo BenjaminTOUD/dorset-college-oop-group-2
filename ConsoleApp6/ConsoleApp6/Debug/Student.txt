@@ -1,0 +1,4 @@
+,2,2/100/50/40/1000/,10/20/,True/False/,1,foucauld,mot de passe,Versailles,mai,0667644678
+,2,2/,,,2,hugo,mdp,Paris,janvier,78900
+,2,2/,,,7,victor,cazaux,paris,26/11/2020,06
+,2,2/,,,18,tristan,,,26/11/2020,0
