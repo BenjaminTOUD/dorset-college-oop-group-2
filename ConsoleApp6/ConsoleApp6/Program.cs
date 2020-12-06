@@ -152,7 +152,7 @@ namespace Main_projet
         static void ListToStudent(string[][] tabstud,List<Student> Students)       //Creates a new student with informations collected in the .txt file
         {
             
-            for (int i = 0; i < tabstud.Length; i++)                            //Getting a tab filled with the informations of all the students
+            for (int i = 0; i < tabstud.Length; i++)                            //Getting a tab filled with the informations of all the students.
             {
                 for (int j = -11; j < tabstud[i].Length - 11; j = j + 11)//Going all the way through the tab
                 {
