@@ -424,22 +424,7 @@ namespace Main_projet
         static void Main(string[] args)
         {
             Console.Title = "Virtual Global College Platform";                //Setting the name of the console to VGC Platform
-            //List<Course> tab = new List<Course>();
-            //List<Course> tab2 = new List<Course>();
-            //List<int> pay = new List<int>();
-            //List<List<double>> notes = new List<List<double>>();
-            //List<List<double>> note = new List<List<double>>();
-            //List<double> po = new List<double>();
-            //List<double> pos = new List<double>();
-            //notes.Add(po);
-            //note.Add(pos);
-            //List<bool> att = new List<bool>();
-            //List<Student> classe = new List<Student>();
-            //FacultyMember prof = new FacultyMember(tab, 13, "Clain", "esilv", "chien", "Versailles", "ESILV");
-            //Tutor PP = new Tutor(tab, 12, "thai", "esilv", "info", "math", "03");
-            //Student stud = new Student(tab, 3, pay, notes, att, 1, "foucauld", "password", "La Clancheuse", "mai", "0667644678");
-            //Student student = new Student(tab, 2, pay, note, att, 2, "hugo", "mdp", "rambouillet", "janvier", "78900");
-            //Course math = new Course("math", 3, "math", prof, "math", classe);
+            
             string[][] tabstud = FileToArray("./Student.txt");
             string[][] tabcourse = FileToArray("./Course.txt");
             string[][] tabadmin = FileToArray("./Admin.txt");
@@ -452,7 +437,7 @@ namespace Main_projet
             List<Tutor> Tutors = new List<Tutor>();
             List<Course> Courses = new List<Course>();
             List<Exam> Exams = new List<Exam>();
-            //Admin admin = new Admin(0, "admin", "admin", "Versailles", "26/11/2020", "0665232604");
+            
             
             ListToAdmin(tabadmin, Admins);
             ListToStudent(tabstud, Students);
