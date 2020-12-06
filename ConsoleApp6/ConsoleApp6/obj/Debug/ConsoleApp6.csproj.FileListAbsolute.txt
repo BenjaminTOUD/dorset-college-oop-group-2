@@ -4,3 +4,10 @@ C:\Users\Benj\Desktop\dorset-college-oop-group-2-master\ConsoleApp6\ConsoleApp6\
 C:\Users\Benj\Desktop\dorset-college-oop-group-2-master\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.csproj.CoreCompileInputs.cache
 C:\Users\Benj\Desktop\dorset-college-oop-group-2-master\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.exe
 C:\Users\Benj\Desktop\dorset-college-oop-group-2-master\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.pdb
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\bin\Debug\ConsoleApp6.exe.config
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\bin\Debug\ConsoleApp6.exe
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\bin\Debug\ConsoleApp6.pdb
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.csprojAssemblyReference.cache
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.csproj.CoreCompileInputs.cache
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.exe
+C:\Users\33628\source\repos\dorset-college-oop-group-2\ConsoleApp6\dorset-college-oop-group-23\ConsoleApp6\ConsoleApp6\obj\Debug\ConsoleApp6.pdb
