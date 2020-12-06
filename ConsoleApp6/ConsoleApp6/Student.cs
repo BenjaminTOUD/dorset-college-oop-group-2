@@ -1,20 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project
+namespace Main_projet
 {
-    // 23166 Victor CAZAUX, 23163 Théo UNDERWOOD, 23167 Nicolas GONCALVES, 23206 BENJAMIN TOUBIANA, 23178 FOUCAUD BONNEFONT, 23174 Thomas CULINO
     public class Student : User
     {
-        List<Course> classes = new List<Course>();
-        int year;
-        List<int> payment = new List<int>();
-        public List<List<int>> notes = new List<List<int>>();
-        List<bool> attendance = new List<bool>();
-
+        public List<Course> classes = new List<Course>();
+        public int year;
+        public List<int> payment = new List<int>();
+        public List<List<double>> notes = new List<List<double>>();
+        public List<bool> attendance = new List<bool>();
         public List<bool> Attendance => attendance;
 
         public List<int> Payment
@@ -24,7 +22,7 @@ namespace Project
         }
 
         // constructor with all the student's information
-        public Student(List<Course> classes, int year, List<int> payment, List<List<int>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
+        public Student(List<Course> classes, int year, List<int> payment, List<List<double>> notes, List<bool> attendance, int ID, string name, string password, string adress, string inscriptionDate, string phoneNumber) : base(ID, name, password, adress, inscriptionDate, phoneNumber)
         {
             this.classes = classes;
             this.year = year;
@@ -36,25 +34,42 @@ namespace Project
         public void RegisterCourse(Course course) // allows a student to register for courses
         {
             classes.Add(course);
-            Console.WriteLine("You just have registered for the following course : " + course);
+            course.clas.Add(this);
+            Console.WriteLine("You just have registered for the following course : " + course.name);
         }
         public void ToStringAttendance() // displays the attendances of the student
         {
+            int absent = 0;
+            int present = 0;
             for (int i = 0; i < attendance.Count; i++)
             {
-                if(attendance[i]==false)
+                if (attendance[i] == false)
                 {
-                    Console.WriteLine("You were absent");
+                    Console.WriteLine(i + " : You were absent");
+                    absent++;
                 }
-                else if(attendance[i]==true)
+                else if (attendance[i] == true)
                 {
-                    Console.WriteLine("You were present");
+                    Console.WriteLine(i + " : You were present");
+                    present++;
                 }
             }
+            Console.WriteLine("You have been absent for " + absent + " courses out of " + attendance.Count + ".");
         }
+
+        public void Pay(int pay)
+        {
+            payment.Add(pay);                     //Add the new payment to the list of his payment
+            this.ToStringPayment();
+        }
+
         public void ToStringNotes() // displays his notes
         {
-            Console.WriteLine("Here are your notes : " + notes);
+            Console.WriteLine("Here are your notes : ");
+            for (int i = 0; i < notes[0].Count; i++)
+            {
+                Console.WriteLine(notes[0][i]);
+            }
         }
         public void ToStringPayment() // allows the student to pay the tuition fees
         {
@@ -68,10 +83,15 @@ namespace Project
         public void ToStringCourses() // displays the courses in which he is enrolled
         {
             Console.WriteLine("You are registered for the following courses : ");
-            for (int i = 1; i < classes.Count; i++)
+            for (int i = 0; i < classes.Count; i++)
             {
-                Console.WriteLine(classes[i].Name);
+                Console.WriteLine(classes[i].name);
             }
+        }
+
+        public void ToString()
+        {
+            Console.WriteLine("Name : " + name + ", ID : " + ID + ", Inscription Date : " + inscriptionDate);
         }
     }
 }
